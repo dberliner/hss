@@ -510,22 +510,11 @@ static void xaprc00x_proxy_process_cmd(struct work_struct *work)
 	int packet_len;
 	struct scm_packet *ack;
 	struct scm_packet *proxy_cmd_buf;
-	int expected_packet_len;
 
 	work_data = (struct work_data_t *) work;
 	proxy_context = work_data->context;
 	packet = (struct scm_packet *)&work_data->data;
 	packet_len = work_data->packet_len;
-
-	/* Sanity check the length against the packet definition */
-	expected_packet_len =
-		packet->hdr.payload_len +
-		sizeof(struct scm_packet_hdr);
-	if (expected_packet_len > packet_len) {
-		pr_err("Expected packet size %db, got %db",
-			expected_packet_len, packet_len);
-		goto exit;
-	}
 
 	ack = xaprc00x_proxy_run_host_cmd(packet, proxy_context);
 
