@@ -346,8 +346,7 @@
 		\bitbox{16}{wMsgID} \\
 		\bitbox{32}{dSockID} \\
 		\bitbox{32}{dPayloadLen (0x08)} \\
-		\bitbox{8}{bFamily (0x00)} &
-		\bitbox{8}{Reserved} &
+		\bitbox{16}{bFamily (0x00)} &
 		\bitbox{16}{wPort}\\
 		\bitbox{32}{IP Address (in Network Byte Order\footnotemark)}
 	\end{bytefield}\\
@@ -361,8 +360,7 @@
 		\bitbox{16}{wMsgID} \\
 		\bitbox{32}{dSockID} \\
 		\bitbox{32}{dPayloadLen (0x28)} \\
-		\bitbox{8}{bFamily (0x01)} &
-		\bitbox{8}{Reserved} &
+		\bitbox{16}{bFamily (0x01)} &
 		\bitbox{16}{wPort}\\
 		\bitbox{32}{dFlowInfo} \\
 		\bitbox{32}{dScopeID} \\

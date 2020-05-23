@@ -94,7 +94,6 @@ union scm_payload_connect_ip_addr {
 
 struct scm_payload_connect_ip {
 	enum scm_family	family;
-	__u8					resvd;
 	__le16					port;
 	union scm_payload_connect_ip_addr	addr;
 };
