@@ -65,8 +65,11 @@ void *hss_proxy_init(void *usb_context)
 {
 	int ret;
 	struct hss_proxy_context *context = NULL;
+
+	printk("%s enter", __func__);
 	/* Make the name large enough to hold the largest possible value */
-	char name[sizeof("hss_data_wq_4294967296")];
+	static const char tname[]="hss_data_wq_4294967296";
+	char name[sizeof(tname)];
 
 	struct workqueue_struct *wq = NULL;
 	struct workqueue_struct *data_wq = NULL;
@@ -115,11 +118,13 @@ free_data_wq:
 free_wq:
 	destroy_workqueue(wq);
 exit:
+	printk("%s return %p", __func__, context);
 	return context;
 }
 
 void hss_proxy_destroy(void *context)
 {
+	printk("%s enter", __func__);
 	struct hss_proxy_context *proxy = context;
 
 	kfree(proxy->read_cache.buf);

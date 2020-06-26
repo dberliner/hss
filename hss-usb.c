@@ -87,6 +87,7 @@ static int hss_assign_endpoints(struct usb_hss *dev)
 	struct usb_endpoint_descriptor *ep_cmd_in, *ep_cmd_out;
 	struct usb_endpoint_descriptor *ep_bulk_in, *ep_bulk_out;
 	int error;
+printk("%s enter", __func__);
 
 	error = usb_find_common_endpoints(dev->interface->cur_altsetting,
 			&ep_bulk_in, &ep_bulk_out, &ep_cmd_in, &ep_cmd_out);
@@ -119,6 +120,7 @@ static int hss_driver_probe(struct usb_interface *interface,
 	struct usb_hss *dev;
 	int retval = 0;
 
+printk("%s enter", __func__);
 	/* Allocate and initialize the device */
 	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
 	if (!dev)
@@ -207,6 +209,7 @@ static int hss_driver_probe(struct usb_interface *interface,
 	dev->proxy_context = hss_proxy_init(dev);
 	if (!dev->proxy_context) {
 		retval = -ENODEV;
+		dev_err(&interface->dev, "HSS Proxy failed.");
 		goto error_free_out_buf;
 	}
 
@@ -238,6 +241,7 @@ static void hss_read_cmd_callback(struct urb *urb)
 {
 	struct usb_hss *dev = urb->context;
 
+printk("%s enter", __func__);
 	if (urb->status == 0) {
 		hss_proxy_rcv_cmd((void *)dev->cmd_in_buffer,
 			urb->actual_length, dev->proxy_context);
@@ -249,6 +253,7 @@ static void hss_read_bulk_callback(struct urb *urb)
 {
 	struct usb_hss *dev = urb->context;
 
+printk("%s enter", __func__);
 	switch (urb->status) {
 	/* Success */
 	case 0:
@@ -276,6 +281,7 @@ static void hss_read_bulk_callback(struct urb *urb)
 
 static int hss_read_cmd(struct usb_hss *dev)
 {
+printk("%s enter", __func__);
 	/* Start listening for commands */
 	usb_fill_int_urb(dev->cmd_in_urb,
 		dev->udev,
@@ -307,6 +313,7 @@ static int hss_read_cmd(struct usb_hss *dev)
 /* Returns the ACK buf and lowers a semaphore to prevent concurrent access */
 void *hss_get_ack_buf(struct usb_hss *dev)
 {
+printk("%s enter", __func__);
 	down(&dev->int_out_sem);
 	return dev->cmd_out_buffer;
 }
@@ -315,6 +322,7 @@ static void hss_cmd_out_callback(struct urb *urb)
 {
 	struct usb_hss *dev = urb->context;
 
+printk("%s enter", __func__);
 	if (urb->status != 0)
 		pr_info("Cmd failed status=%d", urb->status);
 
@@ -323,6 +331,7 @@ static void hss_cmd_out_callback(struct urb *urb)
 
 int hss_cmd_out(void *context, void *msg, int msg_len)
 {
+printk("%s enter", __func__);
 	int ret;
 	struct usb_hss *dev = context;
 
@@ -344,6 +353,7 @@ int hss_cmd_out(void *context, void *msg, int msg_len)
 
 static void hss_bulk_out_callback(struct urb *urb)
 {
+printk("%s enter", __func__);
 	struct usb_hss *dev = urb->context;
 
 	if (urb->status != 0)
@@ -354,6 +364,7 @@ static void hss_bulk_out_callback(struct urb *urb)
 
 int hss_bulk_out(void *context, void *msg, int msg_len)
 {
+printk("%s enter", __func__);
 	int ret = -1;
 	struct usb_hss *dev = context;
 
@@ -386,6 +397,7 @@ int hss_bulk_out(void *context, void *msg, int msg_len)
 
 static void hss_driver_disconnect(struct usb_interface *interface)
 {
+printk("%s enter", __func__);
 	struct usb_hss *dev;
 
 	dev = usb_get_intfdata(interface);
