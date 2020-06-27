@@ -51,26 +51,26 @@ enum __attribute__ ((__packed__)) hss_error {
 	HSS_E_MAX		= 0xFF
 };
 
-struct hss_packet_hdr {
+struct __attribute__ ((__packed__)) hss_packet_hdr {
 	enum hss_opcode	opcode;
 	__le16		msg_id;
 	__le32		sock_id;
 	__le32		payload_len;
 };
 
-struct hss_payload_data {
+struct __attribute__ ((__packed__)) hss_payload_data {
 	__u32 payloadLen;
 	unsigned char data[];
 };
 
-struct hss_payload_open {
+struct __attribute__ ((__packed__)) hss_payload_open {
 	__le32		handle;
 	enum hss_family	addr_family;
 	enum hss_proto	protocol;
 	enum hss_type	type;
 };
 
-struct hss_payload_ack {
+struct __attribute__ ((__packed__)) hss_payload_ack {
 	enum hss_opcode		orig_opcode;
 	enum hss_error		code;
 	union {
@@ -78,13 +78,13 @@ struct hss_payload_ack {
 	};
 };
 
-struct hss_payload_connect_ip6 {
+struct __attribute__ ((__packed__)) hss_payload_connect_ip6 {
 	__le32		flow_info;
 	__le32		scope_id;
 	char		ip_addr[16];
 };
 
-struct hss_payload_connect_ip4 {
+struct __attribute__ ((__packed__)) hss_payload_connect_ip4 {
 	__be32		ip_addr;
 };
 
@@ -93,14 +93,14 @@ union hss_payload_connect_ip_addr {
 	struct hss_payload_connect_ip4 ip4;
 };
 
-struct hss_payload_connect_ip {
+struct __attribute__ ((__packed__)) hss_payload_connect_ip {
 	enum hss_family	family;
 	__u8					resvd;
 	__le16					port;
 	union hss_payload_connect_ip_addr	addr;
 };
 
-struct hss_packet {
+struct __attribute__ ((__packed__)) hss_packet {
 	struct hss_packet_hdr	hdr;
 	union {
 		unsigned char hss_payload_none[0];
