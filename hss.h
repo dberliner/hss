@@ -95,7 +95,7 @@ union hss_payload_connect_ip_addr {
 
 struct hss_payload_connect_ip {
 	enum hss_family	family;
-	__u8                                    resvd;
+	__u8					resvd;
 	__le16					port;
 	union hss_payload_connect_ip_addr	addr;
 };
