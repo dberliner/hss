@@ -46,12 +46,12 @@ void hss_fill_packet(struct hss_packet *packet, u16 opcode,
 {
 	packet->hdr.msg_id = cpu_to_le16(atomic_inc_return(&g_msg_id));
 	packet->hdr.opcode = cpu_to_le16(opcode);
-	packet->hdr.sock_id = cpu_to_le16(sock_id);
+	packet->hdr.sock_id = cpu_to_le32(sock_id);
 }
 
 void hss_fill_payload(struct hss_packet *packet, void *buf, u32 len)
 {
-	packet->hdr.payload_len = cpu_to_le16(len);
+	packet->hdr.payload_len = cpu_to_le32(len);
 	if (buf)
 		memcpy(packet->hss_payload_none, buf, len);
 }
