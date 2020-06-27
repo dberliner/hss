@@ -93,11 +93,11 @@ void hss_packet_fill_noop(struct hss_packet *packet, int len)
 void hss_packet_fill_ack(struct hss_packet_hdr *orig,
 	struct hss_packet *ack)
 {
-	ack->hdr.opcode = cpu_to_le32(HSS_OP_ACK);
-	ack->hdr.msg_id = cpu_to_le32(orig->msg_id);
+	ack->hdr.opcode = cpu_to_le16(HSS_OP_ACK);
+	ack->hdr.msg_id = cpu_to_le16(orig->msg_id);
     ack->hdr.sock_id = cpu_to_le32(orig->sock_id);
 	ack->hdr.payload_len = cpu_to_le32(3);
-	ack->ack.orig_opcode = cpu_to_le32(orig->opcode);
+	ack->ack.orig_opcode = cpu_to_le16(orig->opcode);
 }
 
 /**
@@ -114,18 +114,17 @@ void hss_packet_fill_ack_open(struct hss_packet *packet,
 	struct hss_packet *ack, int ret, u32 id)
 {
 	hss_packet_fill_ack(&packet->hdr, ack);
-
-    add_cpu_to_le(ack->hdr.payload_len, sizeof(ack->ack.empty));
+	add_cpu_to_le(ack->hdr.payload_len, sizeof(ack->ack.empty));
+	ack->hdr.sock_id = cpu_to_le32(id);
 	switch (ret) {
 	case 0:
-		ack->ack.code = cpu_to_le32(HSS_E_SUCCESS);
-		ack->hdr.sock_id = cpu_to_le32(id);
+		ack->ack.code = HSS_E_SUCCESS;
 		break;
 	case -EINVAL:
-		ack->ack.code = cpu_to_le32(HSS_E_INVAL);
+		ack->ack.code = HSS_E_INVAL;
 		break;
 	default:
-		ack->ack.code = cpu_to_le32(HSS_E_HOSTERR);
+		ack->ack.code = HSS_E_HOSTERR;
 		break;
 	}
 }
@@ -145,19 +144,19 @@ void hss_packet_fill_ack_connect(struct hss_packet *packet,
 	hss_packet_fill_ack(&packet->hdr, ack);
 	switch (ret) {
 	case 0:
-		ack->ack.code = cpu_to_le32(HSS_E_SUCCESS);
+		ack->ack.code = HSS_E_SUCCESS;
 		break;
 	case -ECONNREFUSED:
-		ack->ack.code = cpu_to_le32(HSS_E_CONNREFUSED);
+		ack->ack.code = HSS_E_CONNREFUSED;
 		break;
 	case -ENETUNREACH:
-		ack->ack.code = cpu_to_le32(HSS_E_NETUNREACH);
+		ack->ack.code = HSS_E_NETUNREACH;
 		break;
 	case -ETIMEDOUT:
-		ack->ack.code = cpu_to_le32(HSS_E_TIMEDOUT);
+		ack->ack.code = HSS_E_TIMEDOUT;
 		break;
 	default:
-		ack->ack.code = cpu_to_le32(HSS_E_HOSTERR);
+		ack->ack.code = HSS_E_HOSTERR;
 		break;
 	}
 }
