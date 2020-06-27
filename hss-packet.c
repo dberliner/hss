@@ -81,6 +81,35 @@ void hss_packet_fill_noop(struct hss_packet *packet, int len)
 #define add_cpu_to_le(baseLE, addCPU)  baseLE = baseLE + addCPU
 #endif
 
+int hss_get_new_packet_len(enum hss_opcode opcode, int add_payload, enum hss_family family, enum hss_opcode ack_opcode)
+{
+	int len = sizeof(struct hss_packet_hdr);
+
+	switch (opcode) {
+		case HSS_OP_OPEN:
+			len += sizeof(struct hss_payload_open);
+			break;
+		case HSS_OP_CONNECT:
+			if(family == HSS_FAM_IP6)
+				len += sizeof(struct hss_payload_connect_ip6);
+			else
+				len += sizeof(struct hss_payload_connect_ip4);
+			break;
+		case HSS_OP_TRANSMIT:
+			len += add_payload;
+			break;
+		case HSS_OP_ACK:
+			len += sizeof(struct hss_payload_ack);
+			break;
+		case HSS_OP_SHUTDOWN:
+		case HSS_OP_ACKDATA:
+		case HSS_OP_CLOSE:
+		default:
+			break;
+	}
+	return len;
+}
+
 /**
  * hss_packet_fill_ack - Fill common ACK fields
  *
