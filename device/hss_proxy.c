@@ -4,9 +4,9 @@
 #include <linux/usb/composite.h>
 #include <linux/mutex.h>
 #include <linux/net.h>
-#include <linux/hss.h>
 #include <linux/spinlock.h>
 #include <net/sock.h>
+#include <linux/hss.h>
 #include <net/hss.h>
 
 /* HSS Proxy internal functions */

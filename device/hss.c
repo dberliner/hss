@@ -11,7 +11,7 @@
 #include <linux/sched/signal.h>
 #include <net/sock.h>
 #include <net/hss.h>
-#include "hss.h"
+#include <hss.h>
 
 /* Define PF_HSS and AF_HSS if not defined */
 #ifndef PF_HSS
