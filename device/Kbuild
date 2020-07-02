@@ -1,2 +1,2 @@
-obj-m += hss.o
+obj-m += hss.o hss_dummy.o
 hss-objs := hss_proxy.o
