@@ -287,6 +287,11 @@ void *hss_proxy_init(void *usb_context, struct hss_usb_descriptor *intf)
 {
 	struct hss_proxy_inst *proxy_inst;
 
+	/* TODO: This is a bandaid on the inability of this module to be reloaded */
+	if(proxy_inst = hss_get_ctx()) {
+		proxy_inst->usb_intf = intf;
+	}
+
 	/* Create a name that can contain the counter */
 	char hss_wq_name[sizeof("hss_wq_4294967296")];
 	char hss_data_wq_name[sizeof("hss_data_wq_4294967296")];
@@ -312,9 +317,21 @@ void *hss_proxy_init(void *usb_context, struct hss_usb_descriptor *intf)
 	/* Start up the Xaptum HSS socket module */
 	hss_register(proxy_inst);
 
+out:
 	return proxy_inst;
 }
 EXPORT_SYMBOL_GPL(hss_proxy_init);
+
+
+void hss_proxy_unregister(void *usb_context) {
+	struct hss_proxy_inst *proxy_inst;
+
+	if(proxy_inst = hss_get_ctx()) {
+		proxy_inst->usb_intf = NULL;
+	}
+}
+EXPORT_SYMBOL_GPL(hss_proxy_unregister);
+
 
 /**
  * hss_proxy_connect_socket - Connect an HSS socket

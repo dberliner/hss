@@ -755,6 +755,10 @@ void hss_sock_open_ack(int sock_id, struct hss_packet *ack)
 	wake_up_interruptible_all(&wq->wait);
 }
 
+void * hss_get_ctx(void) {
+	return g_proxy_context;
+}
+
 /**
  * hss_register - Initializes the socket type and registers the calling
  * proxy instance.
@@ -785,23 +789,19 @@ int hss_register(void *proxy_context)
 	}
 	g_proxy_context = proxy_context;
 
-	err = proto_register(&hss_proto, 0);
-	if (err < 0) {
-		pr_debug("Error registering psock protocol");
-		goto clear_context;
-	}
-
-	err = sock_register(&hss_family_ops);
-	if (err < 0) {
-		pr_debug("Error registering socket");
-		goto clear_context;
-	}
 
 	return 0;
 clear_context:
 	g_proxy_context = NULL;
 exit:
 	return err;
+}
+
+void hss_unregister(void *proxy_context)
+{
+	if (proxy_context == g_proxy_context) {
+		g_proxy_context = NULL;
+	}
 }
 
 struct sock *hss_get_sock(int key)
@@ -816,16 +816,32 @@ static void __exit hss_cleanup_sockets(void)
 {
 	printk("%s INIT", __func__);
 
-	proto_unregister(&hss_proto);
 	sock_unregister(hss_family_ops.family);
+	proto_unregister(&hss_proto);
 	rhashtable_destroy(&g_hss_socket_table);
 }
 
 static int __init hss_init_sockets(void)
 {
+	int err;
 	printk("%s INIT", __func__);
+	
 	rhashtable_init(&g_hss_socket_table, &ht_parms);
-	return 0;
+
+	err = proto_register(&hss_proto, 0);
+	if (err < 0) {
+		pr_debug("Error registering HSS protocol");
+		goto out;
+	}
+
+	err = sock_register(&hss_family_ops);
+	if (err < 0) {
+		pr_debug("Error registering socket");
+		goto out;
+	}
+
+out:
+	return err;
 }
 
 subsys_initcall(hss_init_sockets);
