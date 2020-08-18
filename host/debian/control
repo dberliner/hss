@@ -1,0 +1,11 @@
+Source: xap-hss-host
+Section: misc
+Priority: optional
+Maintainer: Daniel Berliner <daniel.berliner@xaptum.com>
+Build-Depends: debhelper (>= 7), dkms
+Standards-Version: 4.3.0
+
+Package: xap-hss-host
+Architecture: amd64
+Depends: dkms (>= 1.95), ${misc:Depends}
+Description: xap-hss-host driver in DKMS format.
